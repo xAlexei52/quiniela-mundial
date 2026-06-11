@@ -42,12 +42,13 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           # Hostinger: FTP simple en el puerto 21 es lo más estable con este action.
           # (Con "ftps" suele dar "Timeout (control socket)" por el handshake TLS.)
-          protocol: ftps
+          protocol: ftp
           port: 21
           # Más margen: Hostinger a veces tarda en responder el socket de control.
           timeout: 120000
-          # La cuenta FTP ya está "chrooteada" a la carpeta del proyecto, así que la raíz es "./".
-          server-dir: /quiniela/
+          # Cuenta MAIN u661117467 (cae en su home /home/u661117467, que es la raíz FTP "/").
+          # Ruta completa hasta la carpeta del proyecto dentro del dominio:
+          server-dir: /domains/alexeipalacios.cloud/public_html/quiniela/
           # No subimos esto: el servidor tiene su propio .env, y vendor/build ya van compilados.
           exclude: |
             **/.git*
