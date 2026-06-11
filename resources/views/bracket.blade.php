@@ -2,6 +2,12 @@
 @section('title', 'Eliminatorias')
 
 @section('content')
+@php
+    $order = ['r32', 'r16', 'qf', 'sf', 'final'];
+    $treeStages = collect($order)->filter(fn ($s) => isset($rounds[$s]) && $rounds[$s]->isNotEmpty());
+    $thirdPlace = $rounds['third_place'] ?? collect();
+@endphp
+
 <div class="page-head">
     <h1>Eliminatorias</h1>
     <div class="sub">Dieciseisavos → Octavos → Cuartos → Semifinal → Final</div>
@@ -24,15 +30,30 @@
         </div>
     @endif
 @else
-    <div class="grid cols-3">
-        @foreach ($rounds as $stage => $fixtures)
-            <div class="card">
-                <h3>{{ \App\Models\Fixture::STAGES[$stage] ?? $stage }}</h3>
-                @foreach ($fixtures as $fx)
-                    @include('partials.match', ['fx' => $fx, 'owners' => $owners])
-                @endforeach
-            </div>
-        @endforeach
+    <div class="bracket-wrap">
+        <div class="bracket">
+            @foreach ($treeStages as $stage)
+                <div class="round-col">
+                    <div class="round-title">{{ \App\Models\Fixture::STAGES[$stage] ?? $stage }}</div>
+                    <div class="round-matches">
+                        @foreach ($rounds[$stage] as $fx)
+                            <div class="bkt">
+                                @include('partials.bkt', ['fx' => $fx, 'owners' => $owners])
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
+
+    @if ($thirdPlace->isNotEmpty())
+        <div class="card" style="max-width:360px; margin-top:1.2rem">
+            <h3>🥉 Tercer puesto</h3>
+            @foreach ($thirdPlace as $fx)
+                @include('partials.bkt', ['fx' => $fx, 'owners' => $owners])
+            @endforeach
+        </div>
+    @endif
 @endif
 @endsection
