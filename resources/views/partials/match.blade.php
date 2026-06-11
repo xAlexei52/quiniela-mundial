@@ -7,7 +7,7 @@
 <div class="match">
     <div class="side">
         <span class="team">@include('partials.flag', ['team' => $home]) {{ $home?->name ?? 'Por definir' }}</span>
-        @if ($home && ($o = ($owners[$home->id] ?? null)))<span class="owner">{{ $o }}</span>@endif
+        @if ($home)@include('partials.owner', ['participant' => $owners[$home->id] ?? null])@endif
     </div>
 
     <div class="score">
@@ -24,7 +24,7 @@
 
     <div class="side right">
         <span class="team">{{ $away?->name ?? 'Por definir' }} @include('partials.flag', ['team' => $away])</span>
-        @if ($away && ($o = ($owners[$away->id] ?? null)))<span class="owner">{{ $o }}</span>@endif
+        @if ($away)@include('partials.owner', ['participant' => $owners[$away->id] ?? null])@endif
     </div>
 </div>
 @if (!empty($stageLabel) && ($showStage ?? false))

@@ -49,7 +49,7 @@
                         <td class="num">
                             <span class="rank-medal">{{ ['🥇','🥈','🥉'][$i] ?? ($i+1) }}</span>
                         </td>
-                        <td>{{ $row['participant']->name }}</td>
+                        <td><span class="owner-dot" style="color: {{ $row['participant']->color() }}; vertical-align:middle; margin-right:.4rem"></span>{{ $row['participant']->name }}</td>
                         <td class="num">
                             <span class="tag {{ $row['alive'] ? 'alive' : 'empty' }}">{{ $row['alive'] }}/{{ $row['total_teams'] }}</span>
                         </td>

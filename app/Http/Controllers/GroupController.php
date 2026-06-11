@@ -15,9 +15,9 @@ class GroupController extends Controller
 
     public function index()
     {
-        // Mapa team_id => nombre del participante dueño.
+        // Mapa team_id => participante dueño (para nombre + color).
         $owners = Assignment::with('participant')->get()
-            ->mapWithKeys(fn (Assignment $a) => [$a->team_id => $a->participant?->name]);
+            ->mapWithKeys(fn (Assignment $a) => [$a->team_id => $a->participant]);
 
         $groups = Group::orderBy('name')->get()->map(function (Group $group) {
             return [

@@ -138,6 +138,10 @@ tbody tr:hover { background: #ffffff05; }
 .match .side.right { text-align: right; align-items: flex-end; }
 .match .team { font-weight: 700; }
 .match .owner { color: var(--text-mute); font-size: .72rem; }
+
+/* Etiqueta de dueño (color por participante) */
+.owner-tag { display: inline-flex; align-items: center; gap: .3rem; font-size: .72rem; font-weight: 700; white-space: nowrap; }
+.owner-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; box-shadow: 0 0 6px currentColor; }
 .match .score { text-align: center; min-width: 64px; font-size: 1.15rem; font-weight: 800; }
 .match .vs { color: var(--text-mute); font-weight: 700; }
 .match .meta { color: var(--text-mute); font-size: .76rem; }

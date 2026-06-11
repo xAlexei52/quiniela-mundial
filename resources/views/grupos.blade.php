@@ -32,8 +32,8 @@
                             <td>
                                 @include('partials.flag', ['team' => $row['team']])
                                 {{ $row['team']->name }}
-                                @if ($o = ($owners[$row['team']->id] ?? null))
-                                    <span class="badge" style="margin-left:.3rem">{{ $o }}</span>
+                                @if ($owners[$row['team']->id] ?? null)
+                                    <span style="margin-left:.35rem">@include('partials.owner', ['participant' => $owners[$row['team']->id]])</span>
                                 @endif
                             </td>
                             <td class="num">{{ $row['played'] }}</td>

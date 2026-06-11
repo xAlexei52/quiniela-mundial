@@ -15,7 +15,7 @@
             <div class="spread" style="margin-bottom:.6rem">
                 <div class="row" style="gap:.5rem">
                     <span class="rank-medal">{{ ['🥇','🥈','🥉'][$i] ?? '#'.($i+1) }}</span>
-                    <b>{{ $row['participant']->name }}</b>
+                    <b style="color: {{ $row['participant']->color() }}">{{ $row['participant']->name }}</b>
                 </div>
                 <span class="pill-pts" style="font-size:1.2rem">{{ $row['score'] }} pts</span>
             </div>

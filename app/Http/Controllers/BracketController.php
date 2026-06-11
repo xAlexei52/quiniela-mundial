@@ -15,7 +15,7 @@ class BracketController extends Controller
     public function index()
     {
         $owners = Assignment::with('participant')->get()
-            ->mapWithKeys(fn (Assignment $a) => [$a->team_id => $a->participant?->name]);
+            ->mapWithKeys(fn (Assignment $a) => [$a->team_id => $a->participant]);
 
         // Incluye 3er puesto y final junto al flujo normal.
         $stages = ['r32', 'r16', 'qf', 'sf', 'third_place', 'final'];
