@@ -1,0 +1,16 @@
+# Plan B para hosting compartido donde el document root apunta a la RAÍZ del
+# proyecto (no a /public). Reenvía todas las peticiones a la carpeta public/,
+# donde vive el front controller de Laravel. Si configuras el document root
+# directamente en .../quiniela/public, este archivo es inofensivo.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # No tocar peticiones que ya apuntan a /public
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Defensa extra: nunca servir archivos sensibles si el doc root quedara en la raíz.
+<FilesMatch "^(\.env.*|composer\.(json|lock)|package\.json|artisan)$">
+    Require all denied
+</FilesMatch>
