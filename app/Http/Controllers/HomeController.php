@@ -15,13 +15,13 @@ class HomeController extends Controller
     {
         $leaderboard = $this->scoring->leaderboard();
 
-        // Premios: bote repartido al top 3.
-        $pool   = (int) config('quiniela.prize.pool');
-        $splits = config('quiniela.prize.splits', [0.5, 0.3, 0.2]);
-        $prizes = collect($splits)->map(fn ($pct, $i) => [
+        // Premios: montos fijos al top 3.
+        $pool    = (int) config('quiniela.prize.pool');
+        $amounts = config('quiniela.prize.amounts', [4000, 1500, 500]);
+        $prizes = collect($amounts)->map(fn ($amt, $i) => [
             'place'   => $i + 1,
-            'amount'  => (int) round($pool * $pct),
-            'pct'     => (int) round($pct * 100),
+            'amount'  => (int) $amt,
+            'pct'     => $pool > 0 ? (int) round($amt / $pool * 100) : 0,
             'winner'  => $leaderboard[$i]['participant'] ?? null,
             'score'   => $leaderboard[$i]['score'] ?? null,
         ]);

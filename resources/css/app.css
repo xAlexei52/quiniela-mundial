@@ -198,9 +198,42 @@ tbody tr:hover { background: #ffffff05; }
 .team-chip { display: inline-flex; align-items: center; gap: .4rem; background: var(--bg-2); border: 1px solid var(--border); border-radius: 999px; padding: .25rem .6rem; font-size: .82rem; }
 .team-chip.out { opacity: .55; }
 .team-chip .flag { font-size: 1.05rem; }
-.flag-img { width: 24px; height: 18px; object-fit: cover; border-radius: 3px; vertical-align: -3px; box-shadow: 0 0 0 1px #00000066; }
-.flag { font-size: 1.05rem; }
-td .flag-img, th .flag-img { vertical-align: -4px; }
+/* Bandera estilo "card": cuadrada (1:1), esquinas redondeadas asimétricas y
+   anillo blanco sutil (igual que la referencia). */
+.flag-img {
+    width: 28px; aspect-ratio: 1 / 1; height: 28px; object-fit: cover; flex-shrink: 0;
+    border-radius: 10px 0;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .14);
+    vertical-align: -8px;
+}
+.flag { font-size: 1.2rem; }
+td .flag-img, th .flag-img { vertical-align: -9px; }
+
+/* ---------- Iconos SVG ---------- */
+.ico-svg { display: block; }
+.nav-link .ico, .bottom-link .ico { color: inherit; }
+.btn .ico-svg { margin-right: -.1rem; }
+
+/* ---------- Medallas de ranking (reemplazan emojis) ---------- */
+.medal {
+    display: inline-grid; place-items: center; width: 23px; height: 23px; border-radius: 50%;
+    font-size: .74rem; font-weight: 800; color: #10243a; flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px #00000022;
+}
+.medal.m1 { background: linear-gradient(135deg, #f7d65a, #f4c430); }
+.medal.m2 { background: linear-gradient(135deg, #e6edf7, #b9c4d6); }
+.medal.m3 { background: linear-gradient(135deg, #e0a065, #cd7f32); color: #2a1500; }
+.medal.mn { background: var(--surface-2); color: var(--text-dim); box-shadow: inset 0 0 0 1px var(--border); }
+
+/* ---------- Gráfica de línea (puntos) ---------- */
+.line-chart { width: 100%; height: auto; display: block; }
+.line-chart .grid-line { stroke: var(--border); stroke-width: 1; }
+.line-chart .area { fill: url(#lc-grad); opacity: .9; }
+.line-chart .line { fill: none; stroke: var(--primary); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.line-chart .dot { fill: var(--bg-2); stroke: var(--primary); stroke-width: 2.5; }
+.line-chart .dot.lead { fill: var(--gold); stroke: var(--gold); }
+.line-chart .val { fill: var(--gold); font-size: 11px; font-weight: 800; text-anchor: middle; }
+.line-chart .xlabel { fill: var(--text-mute); font-size: 10px; }
 
 /* ---------- Bracket (árbol de eliminatorias) ---------- */
 .bracket-wrap { overflow-x: auto; padding: .3rem .3rem 1rem; }

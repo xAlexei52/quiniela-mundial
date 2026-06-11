@@ -23,11 +23,11 @@
         <div class="row">
             <form method="POST" action="{{ route('admin.sync') }}">
                 @csrf
-                <button class="btn primary sm" {{ $apiConfigured ? '' : 'disabled' }}>🔄 Sincronizar</button>
+                <button class="btn primary sm" {{ $apiConfigured ? '' : 'disabled' }}>@include('partials.icon', ['name' => 'refresh', 'size' => 15]) Sincronizar</button>
             </form>
             <form method="POST" action="{{ route('admin.teams.random') }}" onsubmit="return confirm('¿Repartir al azar los equipos sin dueño?')">
                 @csrf
-                <button class="btn sm">🎲 Repartir al azar</button>
+                <button class="btn sm">@include('partials.icon', ['name' => 'dice', 'size' => 15]) Repartir al azar</button>
             </form>
             <form method="POST" action="{{ route('admin.teams.clear') }}" onsubmit="return confirm('¿Borrar TODAS las asignaciones?')">
                 @csrf
@@ -55,11 +55,11 @@
                 <form method="POST" action="{{ route('admin.participants.update', $p) }}" class="row" style="flex:1; gap:.4rem">
                     @csrf @method('PUT')
                     <input type="text" name="name" value="{{ $p->name }}" style="flex:1; min-width:0">
-                    <button class="btn sm">✓</button>
+                    <button class="btn sm" title="Guardar">@include('partials.icon', ['name' => 'check', 'size' => 15])</button>
                 </form>
                 <form method="POST" action="{{ route('admin.participants.destroy', $p) }}" onsubmit="return confirm('¿Eliminar a {{ $p->name }}?')">
                     @csrf @method('DELETE')
-                    <button class="btn danger sm">🗑</button>
+                    <button class="btn danger sm" title="Eliminar">@include('partials.icon', ['name' => 'trash', 'size' => 15])</button>
                 </form>
             </div>
 

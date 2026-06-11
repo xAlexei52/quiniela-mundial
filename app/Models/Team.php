@@ -72,7 +72,21 @@ class Team extends Model
             return $letters;
         }
 
-        // Subdivisiones del Reino Unido (banderas con secuencia de etiquetas).
+        // Banderas de subdivisión (Inglaterra/Escocia/Gales): emoji "tag sequence"
+        // 🏴 (U+1F3F4) + caracteres de etiqueta U+E0061..U+E007A (a..z). Codifican
+        // p.ej. "gbeng" -> flagcdn "gb-eng".
+        $tags = '';
+        foreach (preg_split('//u', $flag, -1, PREG_SPLIT_NO_EMPTY) ?: [] as $char) {
+            $cp = mb_ord($char, 'UTF-8');
+            if ($cp >= 0xE0061 && $cp <= 0xE007A) {
+                $tags .= chr(ord('a') + ($cp - 0xE0061));
+            }
+        }
+        if (strlen($tags) >= 4) {
+            return substr($tags, 0, 2).'-'.substr($tags, 2);
+        }
+
+        // Último recurso: por código FIFA si existiera.
         return match ($this->code) {
             'ENG' => 'gb-eng',
             'SCO' => 'gb-sct',

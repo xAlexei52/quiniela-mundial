@@ -62,20 +62,56 @@
         </table>
     </div>
 
-    {{-- Gráfica de puntos --}}
+    {{-- Gráfica de puntos (línea) --}}
     <div class="card">
         <h3>Gráfica de puntos</h3>
-        <div class="chart">
-            @forelse ($leaderboard as $i => $row)
-                <div class="chart-row {{ $i === 0 ? 'top' : '' }}">
-                    <span class="name">{{ $row['participant']->name }}</span>
-                    <span class="track"><span class="fill" style="width: {{ max(3, round($row['score'] / $maxScore * 100)) }}%"></span></span>
-                    <span class="val">{{ $row['score'] }}</span>
-                </div>
-            @empty
-                <p class="muted">Sin datos todavía.</p>
-            @endforelse
-        </div>
+        @php
+            $pts = $leaderboard->values();
+            $n = $pts->count();
+            $W = 620; $H = 234; $pl = 16; $pr = 16; $pt = 26; $pb = 50;
+            $plotW = $W - $pl - $pr; $plotH = $H - $pt - $pb;
+            $max = max(1, (int) $maxScore);
+            $coords = [];
+            foreach ($pts as $i => $row) {
+                $x = $n > 1 ? $pl + $plotW * $i / ($n - 1) : $pl + $plotW / 2;
+                $y = $pt + $plotH * (1 - $row['score'] / $max);
+                $coords[] = ['x' => round($x, 1), 'y' => round($y, 1), 'row' => $row];
+            }
+            $line = collect($coords)->map(fn ($c) => $c['x'].','.$c['y'])->implode(' ');
+            $base = $pt + $plotH;
+            $area = $coords ? ($coords[0]['x'].','.$base.' '.$line.' '.end($coords)['x'].','.$base) : '';
+        @endphp
+
+        @if ($n)
+            <svg class="line-chart" viewBox="0 0 {{ $W }} {{ $H }}" preserveAspectRatio="xMidYMid meet" role="img">
+                <defs>
+                    <linearGradient id="lc-grad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#11b7c6" stop-opacity="0.35"/>
+                        <stop offset="100%" stop-color="#11b7c6" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+
+                {{-- líneas de referencia --}}
+                @foreach ([0, 0.5, 1] as $g)
+                    @php $gy = $pt + $plotH * $g; @endphp
+                    <line class="grid-line" x1="{{ $pl }}" y1="{{ $gy }}" x2="{{ $W - $pr }}" y2="{{ $gy }}"/>
+                @endforeach
+
+                <polygon class="area" points="{{ $area }}"/>
+                <polyline class="line" points="{{ $line }}"/>
+
+                @foreach ($coords as $i => $c)
+                    <circle class="dot {{ $i === 0 ? 'lead' : '' }}" cx="{{ $c['x'] }}" cy="{{ $c['y'] }}" r="4.5"/>
+                    <text class="val" x="{{ $c['x'] }}" y="{{ $c['y'] - 10 }}">{{ $c['row']['score'] }}</text>
+                    <text class="xlabel" x="{{ $c['x'] }}" y="{{ $H - 26 }}"
+                          text-anchor="end" transform="rotate(-40 {{ $c['x'] }} {{ $H - 26 }})">
+                        {{ \Illuminate\Support\Str::limit(\Illuminate\Support\Str::before($c['row']['participant']->name, ' '), 9, '') }}
+                    </text>
+                @endforeach
+            </svg>
+        @else
+            <p class="muted">Sin datos todavía.</p>
+        @endif
     </div>
 </div>
 

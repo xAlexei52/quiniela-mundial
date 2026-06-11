@@ -64,7 +64,8 @@ return [
     'prize' => [
         'pool'     => (int) env('QUINIELA_PRIZE_POOL', 6000),
         'currency' => env('QUINIELA_CURRENCY', 'MXN'),
-        'splits'   => [0.50, 0.30, 0.20],
+        // Monto fijo a repartir por puesto (1º, 2º, 3º).
+        'amounts'  => [4000, 1500, 500],
     ],
 
 ];

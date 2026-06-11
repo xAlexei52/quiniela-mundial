@@ -11,11 +11,11 @@
 <body>
 @php
     $nav = [
-        ['home',          'Resumen',       '🏆'],
-        ['participantes', 'Participantes', '👥'],
-        ['grupos',        'Grupos',        '📊'],
-        ['bracket',       'Eliminatorias', '🗺️'],
-        ['admin.dashboard','Admin',        '⚙️'],
+        ['home',           'Resumen',       'trophy'],
+        ['participantes',  'Participantes', 'users'],
+        ['grupos',         'Grupos',        'grid'],
+        ['bracket',        'Eliminatorias', 'bracket'],
+        ['admin.dashboard','Admin',         'settings'],
     ];
 @endphp
 <div class="app">
@@ -31,13 +31,12 @@
         @foreach ($nav as [$route, $label, $ico])
             <a href="{{ $route === 'admin.dashboard' ? route('admin.login') : route($route) }}"
                class="nav-link {{ request()->routeIs($route) || ($route==='admin.dashboard' && request()->routeIs('admin.*')) ? 'active' : '' }}">
-                <span class="ico">{{ $ico }}</span> {{ $label }}
+                <span class="ico">@include('partials.icon', ['name' => $ico])</span> {{ $label }}
             </a>
         @endforeach
 
         <div class="sidebar-foot">
-            Bote ${{ number_format((int) config('quiniela.prize.pool')) }} · reparto top 3<br>
-            Hecho con ⚽ para los compas
+            Bote ${{ number_format((int) config('quiniela.prize.pool')) }} · reparto top 3
         </div>
     </aside>
 
@@ -57,7 +56,7 @@
     @foreach ($nav as [$route, $label, $ico])
         <a href="{{ $route === 'admin.dashboard' ? route('admin.login') : route($route) }}"
            class="bottom-link {{ request()->routeIs($route) || ($route==='admin.dashboard' && request()->routeIs('admin.*')) ? 'active' : '' }}">
-            <span class="ico">{{ $ico }}</span>
+            <span class="ico">@include('partials.icon', ['name' => $ico])</span>
             <span class="lbl">{{ $label }}</span>
         </a>
     @endforeach
