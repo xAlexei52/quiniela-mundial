@@ -47,7 +47,7 @@ jobs:
           # Más margen: Hostinger a veces tarda en responder el socket de control.
           timeout: 120000
           # La cuenta FTP ya está "chrooteada" a la carpeta del proyecto, así que la raíz es "./".
-          server-dir: /quiniela
+          server-dir: /quiniela/
           # No subimos esto: el servidor tiene su propio .env, y vendor/build ya van compilados.
           exclude: |
             **/.git*
