@@ -60,7 +60,6 @@ jobs:
             phpunit.xml
             README.md
             database/*.sqlite
-            storage/framework/views/**
-            storage/framework/cache/**
-            storage/framework/sessions/**
-            storage/logs/**
+            storage/logs/*.log
+            storage/framework/views/*.php
+            storage/framework/cache/data/**
