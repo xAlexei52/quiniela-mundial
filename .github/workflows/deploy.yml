@@ -16,7 +16,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: "8.2"
           extensions: mbstring, bcmath, pdo, pdo_mysql, intl, zip
           coverage: none
 
@@ -26,8 +26,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Compilar assets (Tailwind/Vite)
         run: |
@@ -40,13 +40,14 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          # Hostinger soporta FTP seguro (FTPS). Si tu plan solo da FTP simple, cambia a "ftp".
+          # Hostinger: FTP simple en el puerto 21 es lo más estable con este action.
+          # (Con "ftps" suele dar "Timeout (control socket)" por el handshake TLS.)
           protocol: ftps
           port: 21
-          # Carpeta destino en el servidor (debe terminar en /). Ej:
-          #   /domains/tudominio.com/private/quiniela/   (recomendado, fuera de public_html)
-          # Configúrala en el secret FTP_SERVER_DIR.
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          # Más margen: Hostinger a veces tarda en responder el socket de control.
+          timeout: 120000
+          # La cuenta FTP ya está "chrooteada" a la carpeta del proyecto, así que la raíz es "./".
+          server-dir: /quiniela
           # No subimos esto: el servidor tiene su propio .env, y vendor/build ya van compilados.
           exclude: |
             **/.git*

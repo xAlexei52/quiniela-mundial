@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Quiniela Mageova') · {{ config('app.name', 'Mundial 2026') }}</title>
+    <title>@yield('title', 'Quiniela Mundialista') · {{ config('app.name', 'Mundial 2026') }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
@@ -20,9 +21,9 @@
 <div class="app">
     <aside class="sidebar">
         <div class="brand">
-            <div class="logo">⚽</div>
+            <img class="logo-img" src="{{ asset('img/logo.png') }}" alt="Quiniela Mundialista">
             <div>
-                <b>Quiniela Mageova</b>
+                <b>Quiniela Mundialista</b>
                 <small>Mundial 2026</small>
             </div>
         </div>

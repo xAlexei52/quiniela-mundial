@@ -68,6 +68,7 @@ input:focus, select:focus { outline: 2px solid var(--primary-dim); outline-offse
 }
 .brand b { font-size: 1.05rem; line-height: 1.1; }
 .brand small { color: var(--text-mute); font-size: .72rem; display: block; }
+.logo-img { width: 42px; height: 42px; object-fit: contain; border-radius: 10px; flex-shrink: 0; }
 
 .nav-link {
     color: var(--text-dim); border-radius: 10px; align-items: center; gap: .7rem;
