@@ -18,7 +18,7 @@
             @endif
         @else
             <span class="vs">vs</span>
-            <div class="meta">{{ $fx->kickoff_at?->format('d/m H:i') }}</div>
+            <div class="meta">{{ $fx->kickoffLocal()?->format('d/m H:i') }}</div>
         @endif
     </div>
 

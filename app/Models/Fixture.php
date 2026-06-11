@@ -45,6 +45,15 @@ class Fixture extends Model
         return $this->belongsTo(Team::class, 'away_team_id');
     }
 
+    /**
+     * Hora del partido convertida a la zona horaria de visualización
+     * (config quiniela.timezone). El valor se guarda en UTC.
+     */
+    public function kickoffLocal(): ?\Illuminate\Support\Carbon
+    {
+        return $this->kickoff_at?->copy()->timezone(config('quiniela.timezone'));
+    }
+
     public function isFinished(): bool
     {
         return $this->status === 'finished'

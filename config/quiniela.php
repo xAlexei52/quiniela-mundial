@@ -53,6 +53,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Zona horaria para mostrar los horarios de los partidos
+    |--------------------------------------------------------------------------
+    |
+    | La API entrega las fechas en UTC; se guardan en UTC y se convierten a esta
+    | zona solo al mostrarlas. México centro = America/Mexico_City (UTC-6).
+    |
+    */
+
+    'timezone' => env('QUINIELA_TZ', 'America/Mexico_City'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Premios (bote)
     |--------------------------------------------------------------------------
     |
