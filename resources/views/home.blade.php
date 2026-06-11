@@ -12,6 +12,16 @@
     <div class="badge gold">Bote ${{ number_format($pool) }} {{ $cur }}</div>
 </div>
 
+{{-- En vivo --}}
+@if ($live->isNotEmpty())
+    <div class="card" style="margin-bottom:1.2rem; border-color:#ef444455">
+        <h3><span class="live-pulse" style="display:inline-block; vertical-align:middle; margin-right:.4rem"></span>En vivo</h3>
+        @foreach ($live as $fx)
+            @include('partials.match', ['fx' => $fx])
+        @endforeach
+    </div>
+@endif
+
 {{-- Premios: top 3 --}}
 <div class="grid cols-3" style="margin-bottom:1.2rem">
     @foreach ($prizes as $prize)

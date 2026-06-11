@@ -8,7 +8,7 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-// Sincroniza marcadores cada 10 minutos (solo actúa si hay API configurada).
-// En Hostinger también puedes correr esto vía cron job directo:
-//   php /ruta/al/proyecto/artisan quiniela:sync-results
-Schedule::command('quiniela:sync-results')->everyTenMinutes()->withoutOverlapping();
+// Sincroniza marcadores cada 3 minutos (para marcadores casi en vivo).
+// Requiere un cron en Hostinger que ejecute `php artisan schedule:run` cada minuto,
+// o bien un cron directo a `php artisan quiniela:sync-results`.
+Schedule::command('quiniela:sync-results')->everyThreeMinutes()->withoutOverlapping();

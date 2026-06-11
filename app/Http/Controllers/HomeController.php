@@ -26,20 +26,25 @@ class HomeController extends Controller
             'score'   => $leaderboard[$i]['score'] ?? null,
         ]);
 
-        // Resultados recientes y próximos partidos.
+        // Partidos en vivo, resultados recientes y próximos.
+        $live = Fixture::with(['homeTeam', 'awayTeam'])
+            ->where('status', 'live')
+            ->orderBy('kickoff_at')->get();
+
         $recent = Fixture::with(['homeTeam', 'awayTeam'])
             ->where('status', 'finished')
+            ->whereNotNull('home_score')->whereNotNull('away_score')
             ->orderByDesc('kickoff_at')->orderByDesc('id')
             ->limit(6)->get();
 
         $upcoming = Fixture::with(['homeTeam', 'awayTeam'])
-            ->where('status', '!=', 'finished')
+            ->where('status', 'scheduled')
             ->whereNotNull('kickoff_at')
             ->orderBy('kickoff_at')
             ->limit(6)->get();
 
         $maxScore = max(1, (int) $leaderboard->max('score'));
 
-        return view('home', compact('leaderboard', 'prizes', 'pool', 'recent', 'upcoming', 'maxScore'));
+        return view('home', compact('leaderboard', 'prizes', 'pool', 'live', 'recent', 'upcoming', 'maxScore'));
     }
 }

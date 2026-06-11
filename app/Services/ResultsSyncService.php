@@ -51,11 +51,19 @@ class ResultsSyncService
                 continue;
             }
 
+            // La API gratis a veces marca "terminado" con marcador nulo. Para no
+            // pisar lo cargado a mano, solo actualizamos cuando hay marcador real.
+            $hasScore = $m['home_score'] !== null && $m['away_score'] !== null;
+            if (! $hasScore) {
+                $skipped++;
+                continue;
+            }
+
             $fixture->fill([
-                'home_score' => $m['home_score'],
-                'away_score' => $m['away_score'],
-                'status'     => $m['status'],
-                'kickoff_at' => $m['kickoff_at'] ? Carbon::parse($m['kickoff_at']) : $fixture->kickoff_at,
+                'home_score'  => $m['home_score'],
+                'away_score'  => $m['away_score'],
+                'status'      => $m['status'],
+                'kickoff_at'  => $m['kickoff_at'] ? Carbon::parse($m['kickoff_at']) : $fixture->kickoff_at,
                 'external_id' => $fixture->external_id ?: $m['external_id'],
             ]);
             $fixture->save();

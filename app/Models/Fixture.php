@@ -61,6 +61,11 @@ class Fixture extends Model
             && $this->away_score !== null;
     }
 
+    public function isLive(): bool
+    {
+        return $this->status === 'live';
+    }
+
     /**
      * Equipo ganador (considera penales en eliminatorias). Null si empate/sin jugar.
      */

@@ -7,7 +7,9 @@ use App\Models\Assignment;
 use App\Models\Fixture;
 use App\Models\Participant;
 use App\Models\Team;
+use App\Services\BracketService;
 use App\Services\ResultsSyncService;
+use App\Services\ScoringService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -15,8 +17,11 @@ class AdminController extends Controller
 {
     public const TEAMS_PER_PARTICIPANT = 4;
 
-    public function __construct(private ResultsSyncService $sync)
-    {
+    public function __construct(
+        private ResultsSyncService $sync,
+        private BracketService $bracket,
+        private ScoringService $scoring,
+    ) {
     }
 
     /** Formulario de PIN (o redirige al panel si ya está autenticado). */
@@ -145,6 +150,36 @@ class AdminController extends Controller
         Assignment::query()->delete();
 
         return back()->with('status', 'Asignaciones borradas.');
+    }
+
+    /** Pantalla de carga/edición manual de marcadores. */
+    public function results()
+    {
+        $stages = Fixture::with(['homeTeam', 'awayTeam', 'group'])
+            ->orderBy('kickoff_at')->orderBy('id')->get()
+            ->groupBy('stage')
+            ->sortBy(fn ($g, $stage) => array_search($stage, array_keys(Fixture::STAGES)));
+
+        return view('admin.resultados', ['stages' => $stages]);
+    }
+
+    public function updateResult(Request $request, Fixture $fixture)
+    {
+        $data = $request->validate([
+            'home_score' => 'nullable|integer|min:0|max:99',
+            'away_score' => 'nullable|integer|min:0|max:99',
+            'home_pens'  => 'nullable|integer|min:0|max:99',
+            'away_pens'  => 'nullable|integer|min:0|max:99',
+            'status'     => 'required|in:scheduled,live,finished',
+        ]);
+
+        $fixture->update($data);
+
+        // Recalcular cuadro, eliminados y puntaje.
+        $this->bracket->generate();
+        $this->scoring->recompute();
+
+        return back()->with('status', 'Marcador guardado y puntos recalculados.');
     }
 
     public function sync()

@@ -36,5 +36,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/equipos/limpiar', [AdminController::class, 'clearAssignments'])->name('teams.clear');
 
         Route::post('/sync', [AdminController::class, 'sync'])->name('sync');
+
+        Route::get('/resultados', [AdminController::class, 'results'])->name('resultados');
+        Route::put('/resultados/{fixture}', [AdminController::class, 'updateResult'])->name('resultados.update');
     });
 });

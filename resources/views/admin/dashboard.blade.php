@@ -21,9 +21,10 @@
     <div class="card">
         <h3>Acciones</h3>
         <div class="row">
+            <a href="{{ route('admin.resultados') }}" class="btn primary sm">Cargar resultados</a>
             <form method="POST" action="{{ route('admin.sync') }}">
                 @csrf
-                <button class="btn primary sm" {{ $apiConfigured ? '' : 'disabled' }}>@include('partials.icon', ['name' => 'refresh', 'size' => 15]) Sincronizar</button>
+                <button class="btn sm" {{ $apiConfigured ? '' : 'disabled' }}>@include('partials.icon', ['name' => 'refresh', 'size' => 15]) Sincronizar</button>
             </form>
             <form method="POST" action="{{ route('admin.teams.random') }}" onsubmit="return confirm('¿Repartir al azar los equipos sin dueño?')">
                 @csrf

@@ -2,9 +2,10 @@
     $owners = $owners ?? collect();
     $home = $fx->homeTeam; $away = $fx->awayTeam;
     $finished = $fx->isFinished();
+    $live = $fx->isLive();
     $stageLabel = \App\Models\Fixture::STAGES[$fx->stage] ?? '';
 @endphp
-<div class="match">
+<div class="match {{ $live ? 'live' : '' }}">
     <div class="side">
         <span class="team">@include('partials.flag', ['team' => $home]) {{ $home?->name ?? 'Por definir' }}</span>
         @if ($home)@include('partials.owner', ['participant' => $owners[$home->id] ?? null])@endif
@@ -16,6 +17,9 @@
             @if ($fx->home_pens !== null && $fx->away_pens !== null)
                 <div class="meta">pen {{ $fx->home_pens }}–{{ $fx->away_pens }}</div>
             @endif
+        @elseif ($live)
+            {{ $fx->home_score ?? 0 }}–{{ $fx->away_score ?? 0 }}
+            <div class="live-tag"><span class="live-pulse"></span>EN VIVO</div>
         @else
             <span class="vs">vs</span>
             <div class="meta">{{ $fx->kickoffLocal()?->format('d/m H:i') }}</div>

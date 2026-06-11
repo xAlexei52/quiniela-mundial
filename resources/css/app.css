@@ -120,6 +120,30 @@ input:focus, select:focus { outline: 2px solid var(--primary-dim); outline-offse
 .badge.live { color: var(--primary); background: #00b86b26; }
 .badge.gold { color: var(--gold); background: #f4c4301a; }
 
+/* ---------- Indicador EN VIVO (estilo marcador) ---------- */
+.live-tag {
+    display: inline-flex; align-items: center; gap: .3rem; margin-top: .15rem;
+    color: #fca5a5; font-size: .64rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em;
+}
+.live-pulse {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--danger); flex-shrink: 0;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, .6); animation: livePulse 1.5s infinite;
+}
+@keyframes livePulse {
+    0%   { box-shadow: 0 0 0 0 rgba(239, 68, 68, .55); }
+    70%  { box-shadow: 0 0 0 7px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+.match.live { border-color: #ef444466; background: linear-gradient(0deg, #ef44440f, var(--bg-2)); }
+.match.live .score { color: #fff; }
+.bkt-inner.live { border-color: #ef444488; box-shadow: var(--shadow), 0 0 0 1px #ef444455; }
+.bkt-live {
+    display: flex; align-items: center; gap: .3rem; justify-content: center;
+    background: #ef44441a; color: #fca5a5; font-size: .58rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: .05em; padding: .12rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
 /* ---------- Tables ---------- */
 table { border-collapse: collapse; width: 100%; font-size: .9rem; }
 th, td { text-align: left; border-bottom: 1px solid var(--border); padding: .55rem .5rem; }
@@ -212,6 +236,14 @@ tbody tr:hover { background: #ffffff05; }
 }
 .flag { font-size: 1.2rem; }
 td .flag-img, th .flag-img { vertical-align: -9px; }
+
+/* ---------- Carga manual de resultados ---------- */
+.result-row { display: flex; align-items: center; gap: .5rem; padding: .45rem 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.result-row .re-team { flex: 1; min-width: 110px; font-size: .85rem; }
+.result-row .re-team.right { text-align: right; }
+.result-row .re-score { width: 46px; text-align: center; padding: .35rem .2rem; }
+.result-row .re-score.sm { width: 38px; }
+.result-row select { padding: .35rem .4rem; font-size: .82rem; }
 
 /* ---------- Iconos SVG ---------- */
 .ico-svg { display: block; }
