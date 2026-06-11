@@ -201,6 +201,36 @@ tbody tr:hover { background: #ffffff05; }
 .flag { font-size: 1.05rem; }
 td .flag-img, th .flag-img { vertical-align: -4px; }
 
+/* ---------- Bracket (árbol de eliminatorias) ---------- */
+.bracket-wrap { overflow-x: auto; padding: .3rem .3rem 1rem; }
+.bracket { display: flex; align-items: stretch; gap: 34px; min-width: max-content; }
+.round-col { display: flex; flex-direction: column; min-width: 208px; }
+.round-col .round-title {
+    text-align: center; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--text-mute); font-size: .72rem; font-weight: 700; padding: .2rem 0 .7rem;
+}
+.round-col .round-matches { display: flex; flex-direction: column; flex: 1; }
+
+.bkt { flex: 1 1 0; display: flex; flex-direction: column; justify-content: center; position: relative; padding: .25rem 0; }
+.bkt-inner { background: var(--bg-2); border: 1px solid var(--border); border-radius: 9px; overflow: hidden; box-shadow: var(--shadow); }
+.bkt-row { display: flex; align-items: center; gap: .45rem; padding: .32rem .55rem; font-size: .82rem; }
+.bkt-row + .bkt-row { border-top: 1px solid var(--border); }
+.bkt-row.win { background: #00b86b18; }
+.bkt-row.win .nm { color: #fff; font-weight: 700; }
+.bkt-row.lose { opacity: .6; }
+.bkt-row .nm { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bkt-row .sc { font-weight: 800; min-width: 16px; text-align: center; }
+.bkt-row .sc.pen { color: var(--text-mute); font-size: .68rem; }
+
+/* Conectores tipo árbol: salida a la derecha + horquilla a la izquierda. */
+.round-col:not(:last-child) .bkt::after {
+    content: ''; position: absolute; right: -17px; top: 50%; width: 17px; height: 2px; background: var(--border);
+}
+.round-col:not(:first-child) .bkt::before {
+    content: ''; position: absolute; left: -17px; top: 25%; bottom: 25%; width: 17px;
+    border: 2px solid var(--border); border-right: 0; border-radius: 7px 0 0 7px;
+}
+
 /* ---------- Mobile: sidebar -> bottom nav ---------- */
 .bottom-nav { display: none; }
 @media (max-width: 720px) {
