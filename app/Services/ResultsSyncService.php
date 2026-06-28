@@ -51,23 +51,35 @@ class ResultsSyncService
                 continue;
             }
 
-            // La API gratis a veces marca "terminado" con marcador nulo. Para no
-            // pisar lo cargado a mano, solo actualizamos cuando hay marcador real.
-            $hasScore = $m['home_score'] !== null && $m['away_score'] !== null;
-            if (! $hasScore) {
-                $skipped++;
-                continue;
+            $changed = false;
+
+            // Rellena los equipos del cruce cuando la API ya los definió. Sirve
+            // para que las casillas "por definir" de las eliminatorias se vayan
+            // llenando solas conforme avanza el torneo, sin esperar al marcador.
+            if ($this->fillTeams($fixture, $m)) {
+                $changed = true;
             }
 
-            $fixture->fill([
-                'home_score'  => $m['home_score'],
-                'away_score'  => $m['away_score'],
-                'status'      => $m['status'],
-                'kickoff_at'  => $m['kickoff_at'] ? Carbon::parse($m['kickoff_at']) : $fixture->kickoff_at,
-                'external_id' => $fixture->external_id ?: $m['external_id'],
-            ]);
-            $fixture->save();
-            $updated++;
+            // La API gratis a veces marca "terminado" con marcador nulo. Para no
+            // pisar lo cargado a mano, solo actualizamos el marcador cuando es real.
+            $hasScore = $m['home_score'] !== null && $m['away_score'] !== null;
+            if ($hasScore) {
+                $fixture->fill([
+                    'home_score'  => $m['home_score'],
+                    'away_score'  => $m['away_score'],
+                    'status'      => $m['status'],
+                    'kickoff_at'  => $m['kickoff_at'] ? Carbon::parse($m['kickoff_at']) : $fixture->kickoff_at,
+                    'external_id' => $fixture->external_id ?: $m['external_id'],
+                ]);
+                $changed = true;
+            }
+
+            if ($changed) {
+                $fixture->save();
+                $updated++;
+            } else {
+                $skipped++;
+            }
         }
 
         // Recalcular cuadro y eliminaciones tras la sincronización.
@@ -127,6 +139,32 @@ class ResultsSyncService
         $this->scoring->recompute();
 
         return ['teams' => $teamCount, 'fixtures' => $fixtureCount];
+    }
+
+    /**
+     * Completa los equipos de un fixture con los que reporta la API, pero solo
+     * los lados que aún están "por definir" (null). Así nunca pisa equipos ya
+     * asignados (cargados a mano o importados) y deja que el cuadro de
+     * eliminatorias se vaya rellenando conforme la API decide los cruces.
+     */
+    private function fillTeams(Fixture $fixture, array $m): bool
+    {
+        $dummy = 0;
+        $changed = false;
+
+        if ($fixture->home_team_id === null && $m['home_ext']
+            && $home = $this->upsertTeam($m['home_ext'], $m['home_name'], null, $dummy)) {
+            $fixture->home_team_id = $home->id;
+            $changed = true;
+        }
+
+        if ($fixture->away_team_id === null && $m['away_ext']
+            && $away = $this->upsertTeam($m['away_ext'], $m['away_name'], null, $dummy)) {
+            $fixture->away_team_id = $away->id;
+            $changed = true;
+        }
+
+        return $changed;
     }
 
     private function upsertTeam(?string $externalId, ?string $name, ?int $groupId, int &$counter): ?Team
