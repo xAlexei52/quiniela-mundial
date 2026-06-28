@@ -18,6 +18,8 @@ interface ResultsProvider
      *   'away_name'    => string|null,
      *   'home_score'   => int|null,
      *   'away_score'   => int|null,
+     *   'home_pens'    => int|null,    // penales (desempate de eliminatorias)
+     *   'away_pens'    => int|null,
      *   'status'       => string,      // scheduled|live|finished
      *   'kickoff_at'   => string|null, // ISO 8601
      *   'stage'        => string|null, // group|r32|r16|qf|sf|final

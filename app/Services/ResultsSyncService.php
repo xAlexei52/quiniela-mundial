@@ -51,21 +51,40 @@ class ResultsSyncService
                 continue;
             }
 
+            // En knockout la API define los emparejamientos conforme avanza el
+            // cuadro; rellenamos los IDs locales en cuanto la API los conoce,
+            // aunque el partido todavía no se haya jugado. Así el bracket deja
+            // de mostrar "Por definir".
+            $home = $this->resolveTeam($m['home_ext'], $m['home_name']);
+            $away = $this->resolveTeam($m['away_ext'], $m['away_name']);
+
+            $attrs = [
+                'home_team_id' => $home?->id ?? $fixture->home_team_id,
+                'away_team_id' => $away?->id ?? $fixture->away_team_id,
+                'status'       => $m['status'],
+                'kickoff_at'   => $m['kickoff_at'] ? Carbon::parse($m['kickoff_at']) : $fixture->kickoff_at,
+                'external_id'  => $fixture->external_id ?: $m['external_id'],
+            ];
+
             // La API gratis a veces marca "terminado" con marcador nulo. Para no
-            // pisar lo cargado a mano, solo actualizamos cuando hay marcador real.
+            // pisar lo cargado a mano, solo escribimos el marcador cuando es real.
             $hasScore = $m['home_score'] !== null && $m['away_score'] !== null;
-            if (! $hasScore) {
+            if ($hasScore) {
+                $attrs['home_score'] = $m['home_score'];
+                $attrs['away_score'] = $m['away_score'];
+                $attrs['home_pens']  = $m['home_pens'];
+                $attrs['away_pens']  = $m['away_pens'];
+            }
+
+            // Nada nuevo que aplicar (sin equipos ni marcador): saltar.
+            $teamsUnchanged = $attrs['home_team_id'] === $fixture->home_team_id
+                && $attrs['away_team_id'] === $fixture->away_team_id;
+            if (! $hasScore && $teamsUnchanged) {
                 $skipped++;
                 continue;
             }
 
-            $fixture->fill([
-                'home_score'  => $m['home_score'],
-                'away_score'  => $m['away_score'],
-                'status'      => $m['status'],
-                'kickoff_at'  => $m['kickoff_at'] ? Carbon::parse($m['kickoff_at']) : $fixture->kickoff_at,
-                'external_id' => $fixture->external_id ?: $m['external_id'],
-            ]);
+            $fixture->fill($attrs);
             $fixture->save();
             $updated++;
         }
@@ -151,6 +170,34 @@ class ResultsSyncService
         if ($isNew) {
             $counter++;
         }
+
+        return $team;
+    }
+
+    /**
+     * Resuelve el equipo local a partir del external_id de la API. Lo crea si
+     * la API ya lo definió y aún no existe localmente (caso típico: knockout).
+     * Devuelve null si la API todavía no define el equipo (TBD).
+     */
+    private function resolveTeam(?string $externalId, ?string $name): ?Team
+    {
+        if (! $externalId) {
+            return null;
+        }
+
+        $team = Team::where('external_id', $externalId)->first();
+        if ($team || ! $name) {
+            return $team;
+        }
+
+        [$esName, $flag] = \App\Support\Countries::resolve($name);
+
+        $team = new Team(['external_id' => $externalId]);
+        $team->name = $esName;
+        if ($flag) {
+            $team->flag = $flag;
+        }
+        $team->save();
 
         return $team;
     }

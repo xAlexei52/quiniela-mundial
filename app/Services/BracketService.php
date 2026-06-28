@@ -24,6 +24,14 @@ class BracketService
      */
     public function generate(): void
     {
+        // Si el cuadro de eliminatorias proviene de la API (fixtures con
+        // external_id), esa es la fuente de verdad: la API rellena equipos y
+        // marcadores conforme avanza el Mundial. No generamos el cuadro propio
+        // para no pisarla. Este método queda como fallback sin API (seeder).
+        if ($this->knockoutManagedByApi()) {
+            return;
+        }
+
         $this->generateRoundOf32();
 
         foreach (self::KNOCKOUT_FLOW as $i => $stage) {
@@ -32,6 +40,17 @@ class BracketService
                 $this->advance($stage, $next);
             }
         }
+    }
+
+    /**
+     * ¿Las rondas de eliminación ya vienen de la API? Lo detectamos por la
+     * presencia de fixtures de knockout con external_id.
+     */
+    private function knockoutManagedByApi(): bool
+    {
+        return Fixture::whereIn('stage', self::KNOCKOUT_FLOW)
+            ->whereNotNull('external_id')
+            ->exists();
     }
 
     private function generateRoundOf32(): void

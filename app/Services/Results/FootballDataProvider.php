@@ -38,6 +38,8 @@ class FootballDataProvider implements ResultsProvider
                 'away_name'   => $m['awayTeam']['name'] ?? null,
                 'home_score'  => $m['score']['fullTime']['home'] ?? null,
                 'away_score'  => $m['score']['fullTime']['away'] ?? null,
+                'home_pens'   => $m['score']['penalties']['home'] ?? null,
+                'away_pens'   => $m['score']['penalties']['away'] ?? null,
                 'status'      => $this->mapStatus($m['status'] ?? ''),
                 'kickoff_at'  => $m['utcDate'] ?? null,
                 'stage'       => $this->mapStage($m['stage'] ?? ''),
